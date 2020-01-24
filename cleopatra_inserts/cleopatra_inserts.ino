@@ -5,24 +5,36 @@
 #define BRIGHTNESS  100
 #define LED_TYPE    WS2811
 //#define LED_PIN     3 // AT Tiny 85
-#define LED_PIN     5 // Arduino
+#define LED_PIN     5 // Arduino UNO
 #define COLOR_ORDER GRB
 
 // Define the array of leds
 CRGB leds[NUM_LEDS];
 
 long attract[] = {
-//  0xFFFFFFFF,
-  0x80000000,
-  0x40000000,
-  0x20000000,
-  0x10000000,
-  0x8000000,
-  0x4000000
-//  0x00000000
+0,
+2147483648,
+3222798336,
+3762028544,
+4034797570,
+4177485827,
+4261404675,
+4294963207,
+4294965263,
+4294966303,
+4294967295,
+2147483647,
+1072168959,
+532938751,
+260169725,
+117481468,
+33562620,
+4088,
+2032,
+992
 };
 
-int nbFrames = 6; // WTF arduino why can't you provide a count method
+int nbFrames = 20; // WTF arduino why can't you provide a count method
 int frameIndex = 0;
 
 void setup() {
@@ -86,15 +98,20 @@ void loop() {
       //Serial.print("0,");
       leds[i] = CRGB::Black;
     }
-    FastLED.show();
   }
+    FastLED.show();  
 
   //Serial.print("\n");
   
 
   frameIndex++;
-  if (frameIndex >= nbFrames) frameIndex = 0;
-  //delay(1);
+  if (frameIndex >= nbFrames) {
+    frameIndex = 0;
+    delay(50);
+  }
+
+  delay(20);
+
   
   /*int r = random(NUM_LEDS);
 
