@@ -51,9 +51,30 @@
         currentFrame++;
         redrawUI();
     };
+	
+	let insertFrame = function() {
+		if (currentFrame === frames.length - 1) {
+			addFrame();
+		} else {
+			let frame = frames[currentFrame].slice(0);
+			frames.splice(currentFrame, 0, frame);
+			currentFrame++;
+			redrawUI();
+		}
+	};
 
     let removeFrame = function() {
-
+		if (currentFrame > 0) {
+			frames.splice(currentFrame, 1);
+			currentFrame--;
+			redrawUI();
+		} else {
+			let frame = [];
+			for (let i = 0 ; i < nbLamps ; i++) {
+				frame.push(false);
+			}
+			frames = [frame];
+		}
     };
 
     let prevFrame = function() {
@@ -71,7 +92,7 @@
         } else {
             currentFrame = 0;
         }
-        redrawUI();        
+        redrawUI();
     };
 
     let playAnimation = function() {
@@ -114,6 +135,7 @@
                 bitStr += frame[j] ? "1":"0";
             }
 
+			// Export int to string of bits
             console.log(parseInt(bitStr,2) + ',');
         }
 
@@ -144,6 +166,7 @@
         //console.log(frames);
 
         document.getElementById('addframe').addEventListener('click', addFrame);
+		document.getElementById('insertframe').addEventListener('click', insertFrame);
         document.getElementById('removeframe').addEventListener('click', removeFrame);
         document.getElementById('prevframe').addEventListener('click', prevFrame);
         document.getElementById('nextframe').addEventListener('click', nextFrame);
