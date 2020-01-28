@@ -10,11 +10,12 @@
     let frameInput;
     let playToken;
 
+    /**
+     * Refresh the UI
+     */
     let redrawUI = function() {
         frameInput.value=currentFrame + 1;
         totalSpan.innerHTML = frames.length;
-
-        //console.log(frames[currentFrame]);
 
         for (let i = 0 ; i < nbLamps ; i++) {
             let isLit = frames[currentFrame][i];
@@ -30,6 +31,9 @@
         }
     };
 
+    /**
+     * Toggle a lamp on/off
+     */
     let toggleLamp = function () {
         let isLit = !!this.classList.contains('lit');
         let inFrameIndex = this.inFrameIndex;
@@ -41,17 +45,21 @@
         } else {
             this.classList.add('lit');
         }
-
-        //console.log(frame);
     };
 
+    /**
+     * Add a frame at the end of the animation (use the last frame as template)
+     */
     let addFrame = function() {
-        let frame = frames[currentFrame].slice(0);
+        let frame = frames[frames.length -1].slice(0);
         frames.push(frame);
-        currentFrame++;
+        currentFrame = frames.length -1;
         redrawUI();
     };
-	
+    
+    /**
+     * Insert frame after the current frame (copy the current frame)
+     */
 	let insertFrame = function() {
 		if (currentFrame === frames.length - 1) {
 			addFrame();
@@ -63,20 +71,36 @@
 		}
 	};
 
+    /**
+     * Remove current frame (or reset the last frame if only one frame left)
+     */
     let removeFrame = function() {
-		if (currentFrame > 0) {
-			frames.splice(currentFrame, 1);
-			currentFrame--;
-			redrawUI();
-		} else {
+        // If it is the last frame then empty it
+        if (frames.length === 1) {
 			let frame = [];
 			for (let i = 0 ; i < nbLamps ; i++) {
 				frame.push(false);
 			}
-			frames = [frame];
-		}
+            frames = [frame];
+
+            currentFrame = 0
+
+        // otherwise strip it    
+        } else {
+			frames.splice(currentFrame, 1);
+            
+            if (currentFrame > 0) {
+                currentFrame--;
+            }
+        }
+
+        redrawUI();
     };
 
+    /**
+     * Animation : deacrese current frame count and refresh the UI
+     * Used by the UI '<' button
+     */
     let prevFrame = function() {
         if (currentFrame > 0) {
             currentFrame--;
@@ -86,6 +110,10 @@
         redrawUI();
     };
 
+    /**
+     * Animation : increase current frame count and refresh the UI
+     * Used by setInterval and the UI '>' button
+     */
     let nextFrame = function() {
         if (currentFrame < frames.length - 1) {
             currentFrame++;
@@ -95,6 +123,9 @@
         redrawUI();
     };
 
+    /**
+     * Start playing the animation starting from the current frame
+     */
     let playAnimation = function() {
         if (frames.length <= 1) return;
 
@@ -105,6 +136,9 @@
         },60);
     };
 
+    /**
+     * Cancel the interval to stop the animation
+     */
     let stopAnimation = function() {
         frameInput.readonly = false;
 
@@ -114,6 +148,9 @@
         }
     };
 
+    /**
+     * Handle UI events coming from the text input
+     */
     let handleInputChange = function() {
         let v = parseInt(this.value,10);
 
@@ -125,6 +162,9 @@
         }
     };
 
+    /**
+     * Convert the array of boolean to an array of int values
+     */
     let exportAnimation = function() {
 
         for (let i = 0 ; i < frames.length ; i++) {
@@ -159,11 +199,8 @@
             frames[0].push(false);
 
             lamp.addEventListener('click', toggleLamp);
-            //lamp.classList.add('lit');
             lamps.push(lamp);
         }
-
-        //console.log(frames);
 
         document.getElementById('addframe').addEventListener('click', addFrame);
 		document.getElementById('insertframe').addEventListener('click', insertFrame);
@@ -178,11 +215,9 @@
     };
 
 
+    // Wait for the DOM to be ready
     document.addEventListener("DOMContentLoaded", function(event) {
-        
         init();
-
-
     });
 
 })();
